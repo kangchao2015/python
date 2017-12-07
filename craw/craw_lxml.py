@@ -1,11 +1,14 @@
 #!/usr/local/bin/python
 # -*- coding:utf-8 -*-
 from download import *
+from bs4 import BeautifulSoup
 import urllib2
 import re
 import os
 import datetime
 import random
+from lxml import *
+import cssselect
 
 
 
@@ -87,9 +90,9 @@ def link_crawer(url, reg, max_depth = -1):
 
 
 
-url = "http://www.baidu.com"
+#url = "http://www.baidu.com"
 #url = "http://www.qq.com"
-url = "http://www.bladeblue.top"
+#url = "http://www.bladeblue.top"
 url = "http://www.qiushibaike.com"
 #while n < 600:
 #    web = "%s%d" % (url, n)
@@ -99,6 +102,18 @@ url = "http://www.qiushibaike.com"
 #html = download2(url, 2);
 #info = get_link(html);
 #print(info);
-link_crawer(url, "(/8hr/page/[0-9]+)|/article/[0-9]+");
+#link_crawer(url, "(/8hr/page/[0-9]+)|/article/[0-9]+");
+
+html = download2(url,2);
+#print html;
+#tree = lxml.etree.fromstring(html);
+#tree = lxml.etree.fromstring(html);
+html = etree.tostring(etree.HTML(html));
+
+print html
+#tree = lxml.html.fromstring(html);
+
+
+#print tree
 
 
