@@ -8,8 +8,4 @@ class KkSpider(scrapy.Spider):
     start_urls = ['http://www.bladeblue.top/']
 
     def parse(self, response):
-        print(response.body);
-        print("-------------------");
-        print(dir(response));
-        print(response.headers);
-        pass
+        print(response);

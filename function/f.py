@@ -19,7 +19,7 @@ def bb(name, age, **kw):
 
 
 def cc(a, b,c=0, *d, e,f, **g):
-	print("a:", a, "b:", b, "c:", c, "d:", d, "e f ", e,f , "g", g)
+print("a:", a, "b:", b, "c:", c, "d:", d, "e f ", e,f , "g", g)
 
 #bb("asdf", 12, city="kkk", pos='asdf');
 #bb('123',99, **ll)
