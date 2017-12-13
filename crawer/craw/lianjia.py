@@ -194,42 +194,44 @@ def get_content_page(url):
             p = p + 1;
         print xpath," %d images download done!" % p;
 
-    except Exception as e:
-        print e;
-
 #    colums = ['指针','的']
-    colums = ['交通出行','____楼层','____图片','挂牌时间','所在楼层','户型结构','套内面积','房屋用途','装修情况','配备电梯','产权年限','____大小','____标题','建筑类型','交易权属','梯户比例','____总价','链家编号','小区名称','____朝向','看房时间','产权所属','建筑结构','____装修','____厅室','____单价','供暖方式','房屋年限','税费解析','上次交易','所在区域','小区介绍','房屋朝向','房本备件','____年代','房屋户型','权属抵押','抵押信息','建筑面积','核心卖点','房源标签'];
-    colums_utf8 = [];
-    for gg in colums:
-        colums_utf8.append(gg.decode('utf8','ignore'));
+        colums = ['链家编号','小区名称','____大小','____标题','____楼层','____图片','____总价','____朝向','____装修','____厅室','____单价','____年代','交通出行','挂牌时间','所在楼层','户型结构','套内面积','房屋用途','装修情况','配备电梯','产权年限','建筑类型','交易权属','梯户比例','看房时间','产权所属','建筑结构','供暖方式','房屋年限','税费解析','上次交易','所在区域','小区介绍','房屋朝向','房本备件','房屋户型','权属抵押','抵押信息','建筑面积','核心卖点','房源标签'];
+        colums_utf8 = [];
+        for gg in colums:
+            colums_utf8.append(gg.decode('utf8','ignore'));
 
-    with open(default_dir+"a.csv", "ab") as q:
-        if bom == 0:
-            q.write(codecs.BOM_UTF8)
-            for dda in colums:
-                q.write(dda + ',');
-            q.write("\r\n");
-            bom = 1;
+        with open(default_dir+"a.csv", "ab") as q:
+            if bom == 0:
+                q.write(codecs.BOM_UTF8)
+                for dda in colums:
+                    q.write(dda + ',');
+                q.write("\r\n");
+                bom = 1;
 
-    with open(default_dir+"a.csv", "ab") as q:
-        str = "";
-        for item in colums:
-            for i,j in restult.items():
-                kk = ","
-                if item == i:
-                    j = j.replace(',',' ');
-                    kk = "%s%s" % (j, ",");
-                    break;
+        with open(default_dir+"a.csv", "ab") as q:
+            str = "";
+            for item in colums:
+                for i,j in restult.items():
+                    kk = ","
+                    if item == i:
+                        j = j.replace(',',' ');
+                        kk = "%s%s" % (j, ",");
+                        break;
 
-            str = str + kk;
-        q.write(str + "\r\n");
-
-
-    total = total + 1;
-    print "%d done\n" % total
+                str = str + kk;
+            q.write(str + "\r\n");
 
 
-    print "================================================"
+        total = total + 1;
+        if '链家编号'.decode('utf8','ignore') in restult:
+            print "%s %d done\n" % (restult['链家编号'.decode('utf8','ignore')],total);
+        else:
+            print total;
+    except Exception as e:
+        with open(default_dir+"err.txt", "ab") as v:
+            if '链家编号'.decode('utf8','ignore') in restult:
+                v.write("%s,%s" % (restult['链家编号'.decode('utf8','ignore')], e));
+
 def lianjia_craw(url):
     global crawer_content_seen;
     global z;
