@@ -20,8 +20,8 @@ sys.setdefaultencoding('utf8');
 
 
 class douban(object):
-	def __init__(self, uri, path):
-		self.url = uri
+	def __init__(self, douban_id, path):
+		self.url = ""
 		self.num = 2;
 		self.default_agetnt = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36';
 		self.default_agetnt1 = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063'
@@ -40,7 +40,7 @@ class douban(object):
 
 		self.count = 1;
 
-		self.list_loop("https://movie.douban.com/celebrity/1324717/partners");
+		self.list_loop("https://movie.douban.com/celebrity/%d/partners" %  douban_id);
 	
 	def actor_loop(self):
 		if self.url not in self.actorset:
@@ -199,11 +199,11 @@ class douban(object):
 						self.result[self.col[z]] = i.xpath("span")[0].tail.strip(':').strip();
 
 		if 'info_sex' in self.result and self.result['info_sex'] != '女':
-			print "sex is not 女"
+			print self.result['info_name'], "sex is not 女"
 			return None;
 
 		if 'info_job' in self.result and self.result['info_job'][0:2] != '演员':
-			print 'job is not 演员 is %s' % self.result['info_job'];
+			print self.result['info_name'],'job is not 演员 is %s' % self.result['info_job'];
 			return None;
 		
 
@@ -250,6 +250,6 @@ class douban(object):
 	    urllib.urlretrieve(url, path);
 
 
-A = douban("https://movie.douban.com/celebrity/1324717/", "D:/python_git/douban/save");
+A = douban(1319247, "D:\python_save\douban\save");
 
 
