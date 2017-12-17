@@ -33,48 +33,114 @@ class douban(object):
 		self.totalimg = ''
 		self.num_retry = 2;
 
-		self.imgqueue = set([]);
-		self.imglist  = set([]);
+		self.imgqueue 	= set([]);
+		self.imglist  	= set([]);
+		self.actorset 	= set([]);
+		self.actorlist	= set([]);
 
 		self.count = 1;
-		self.main();
-		print self.totalimg 
-		self.getimageurllist(self.result['info_imageurl']);
-#		self.show_info();
+
+		self.list_loop("https://movie.douban.com/celebrity/1324717/partners");
+	
+	def actor_loop(self):
+		if self.url not in self.actorset:
+			ret = self.main();
+			if ret != None:
+				print self.totalimg 
+				self.getimageurllist(self.result['info_imageurl']);
+			self.actorset.add(self.url);
+
+		portal_html = self.curl("%s%s" % (self.url, 'partners'));
+		if portal_html == None:
+			print "curl error"
+			return None;
+		else:
+			potral_page = etree.HTML(portal_html.decode('utf-8'));
+
+		actors_node = potral_page.xpath("//div[@class='partners item']");
+		for act  in actors_node:
+			act_url = act.xpath("./div[@class='pic']/a");
+			if len(act_url) > 0:
+				url = act_url[0].attrib['href'];
+				print url
+
+		page_node = potral_page.xpath("//div[@class='paginator']");
+		for page  in page_node[0].xpath(".//a"):
+			page_url = page.attrib['href'];
+			print urllib2.urlparse.urljoin(self.url,'partners', page_url); 
 
 
+	def list_loop(self,url):
+		try:
+			if url not in self.actorlist:
+				portal_html = self.curl(url);
+				if portal_html == None:
+					print "curl error"
+					return None;
+				else:
+					potral_page = etree.HTML(portal_html.decode('utf-8'));
+				self.actorlist.add(url);
+			else:
+				return ;
+
+			actors_node = potral_page.xpath("//div[@class='partners item']");
+			for act  in actors_node:
+				act_url = act.xpath("./div[@class='pic']/a");
+				if len(act_url) > 0:
+					url = act_url[0].attrib['href'];
+					self.list_loop(urllib2.urlparse.urljoin(url,'partners'));
+					self.url = url;
+					ret = self.main();
+					if ret != None:
+						print self.totalimg 
+						self.getimageurllist(self.result['info_imageurl']);
+
+			page_node = potral_page.xpath("//div[@class='paginator']");
+			if len(page_node) > 0:
+				for page  in page_node[0].xpath(".//a"):
+					page_url = page.attrib['href'];
+					self.list_loop(urllib2.urlparse.urljoin(page_url,'partners'));
+		except Exception as e:
+			print "list_loop %s" % e;
 	
 	def get_images(self,url):
 		image_html = self.curl(url);
-		image_html_portal = etree.HTML(image_html.decode('utf-8'));
-		url = image_html_portal.xpath("//div[@class='photo-show']")[0].xpath(".//img")[0];
-		tail = url.attrib['src'].split('.');
-		self.download(url.attrib['src'],self.target_path, "%d.%s" % (self.count, tail[-1]) );
-		print url.attrib['src'], self.count,"/",self.totalimg,"------",self.result['info_name'];
-#		print tail
+		try:
+			image_html_portal = etree.HTML(image_html.decode('utf-8'));
+			url = image_html_portal.xpath("//div[@class='photo-show']")[0].xpath(".//img")[0];
+			tail = url.attrib['src'].split('.');
+			self.download(url.attrib['src'],self.target_path, "%d.%s" % (self.count, tail[-1]) );
+			print url.attrib['src'], self.count,"/",self.totalimg,"------",self.result['info_name'];
+	#		print tail
+		except Exception as e:
+			print "image download fail %d" % self.count;
 
 
 	def getimageurllist(self,url):
-		if url not in self.imglist:
-			image_html = self.curl(url);
-			self.imglist.add(url);
-		else:
-			return;
+		try:
+			if url not in self.imglist:
+				image_html = self.curl(url);
+				self.imglist.add(url);
+			else:
+				return;
 
-		potral_page = etree.HTML(image_html.decode('utf-8'));
-		zzz = potral_page.xpath("//ul[@class='poster-col3 clearfix']")[0];
-		for z in zzz:
-			image_url = z.xpath('.//a')[0].attrib['href'];
-			if image_url not in self.imgqueue:
-				self.get_images(image_url);
-				self.imgqueue.add(image_url);
-				self.count = self.count + 1;
+			potral_page = etree.HTML(image_html.decode('utf-8'));
+			zzz = potral_page.xpath("//ul[@class='poster-col3 clearfix']")[0];
+			for z in zzz:
+				image_url = z.xpath('.//a')[0].attrib['href'];
+				if image_url not in self.imgqueue:
+					self.get_images(image_url);
+					self.imgqueue.add(image_url);
+					self.count = self.count + 1;
 
-		lll = potral_page.xpath("//div[@class='paginator']")[0];
-		for l in lll.xpath(".//a"):
-			link = l.attrib['href'];
-			self.getimageurllist(link);
-			self.imglist.add(link);
+			lll = potral_page.xpath("//div[@class='paginator']")[0];
+			for l in lll.xpath(".//a"):
+				link = l.attrib['href'];
+				self.getimageurllist(link);
+				self.imglist.add(link);
+
+		except Exception as e:
+			print "getimageurllist %s" % e;
 
 	def show_info(self):
 		for i, j in self.result.items():
@@ -88,15 +154,20 @@ class douban(object):
 
 	def main(self):
 
-		#初始化操作
+		#初始化
 		if os.path.exists(self.path):
 			pass
 		else:
 			os.makedirs(self.path);
+		self.result = {};
+		self.count = 1;
+		self.imgqueue 	= set([]);
+		self.imglist  	= set([]);
 
-
+		#抓取页面
 		portal_html  = self.curl(self.url);
 		if portal_html == None:
+			print "curl error"
 			return None;
 		else:
 			potral_page = etree.HTML(portal_html.decode('utf-8'));
@@ -125,13 +196,24 @@ class douban(object):
 		for z in self.col:
 			for i in portal_other_node:	
 				if z == i.xpath("span")[0].text:
-						self.result[self.col[z]] = i.xpath("span")[0].tail.strip(':').strip();	
+						self.result[self.col[z]] = i.xpath("span")[0].tail.strip(':').strip();
+
+		if 'info_sex' in self.result and self.result['info_sex'] != '女':
+			print "sex is not 女"
+			return None;
+
+		if 'info_job' in self.result and self.result['info_job'][0:2] != '演员':
+			print 'job is not 演员 is %s' % self.result['info_job'];
+			return None;
+		
 
 		self.target_path = os.path.join(self.path, self.result['info_name']);
 		if os.path.exists(self.target_path):
-			pass;
+			print self.result['info_name'], "already exist";
+			return None;
 		else:
 			os.makedirs(self.target_path);
+			return True;
 
 	def curl(self,url, type = None, proxy = None, data = None):
 	    #print "download url:", 
@@ -168,5 +250,6 @@ class douban(object):
 	    urllib.urlretrieve(url, path);
 
 
-A = douban("https://movie.douban.com/celebrity/1332193/", "D:/python_git/douban/save");
-#B = douban("https://movie.douban.com/celebrity/1023316/", "D:/python_git/douban/save");
+A = douban("https://movie.douban.com/celebrity/1324717/", "D:/python_git/douban/save");
+
+
