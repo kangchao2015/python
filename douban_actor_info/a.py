@@ -20,7 +20,7 @@ sys.setdefaultencoding('utf8');
 
 
 class douban(object):
-	def __init__(self, douban_id, path):
+	def __init__(self, douban_id, path,mode=0):
 		self.url = ""
 		self.num = 2;
 		self.default_agetnt = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36';
@@ -39,8 +39,10 @@ class douban(object):
 		self.actorlist	= set([]);
 
 		self.count = 1;
-
-		self.list_loop("https://movie.douban.com/celebrity/%d/partners" %  douban_id);
+		if mode == 0:
+			self.list_loop("https://movie.douban.com/celebrity/%d/partners" %  douban_id);
+		else:
+			self.getimageurllist("https://movie.douban.com/celebrity/%d/partners" %  douban_id);
 	
 	def actor_loop(self):
 		if self.url not in self.actorset:
