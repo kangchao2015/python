@@ -21,8 +21,13 @@ sys.setdefaultencoding('utf8');
 
 class douban(object):
 <<<<<<< HEAD
+<<<<<<< HEAD
 	def __init__(self, douban_id, path,mode=0):
 		self.url = ""
+=======
+	def __init__(self, uri, path):
+		self.url = uri
+>>>>>>> parent of 5f60a83... scrapy
 =======
 	def __init__(self, uri, path):
 		self.url = uri
@@ -54,6 +59,9 @@ class douban(object):
 =======
 
 		self.list_loop("https://movie.douban.com/celebrity/1324717/partners");
+<<<<<<< HEAD
+>>>>>>> parent of 5f60a83... scrapy
+=======
 >>>>>>> parent of 5f60a83... scrapy
 	
 	def actor_loop(self):
@@ -214,6 +222,7 @@ class douban(object):
 
 		if 'info_sex' in self.result and self.result['info_sex'] != '女':
 <<<<<<< HEAD
+<<<<<<< HEAD
 			pass;
 #			print self.result['info_name'], "sex is not 女"
 #			return None;
@@ -223,6 +232,8 @@ class douban(object):
 #			print self.result['info_name'],'job is not 演员 is %s' % self.result['info_job'];
 #			return None;
 =======
+=======
+>>>>>>> parent of 5f60a83... scrapy
 			print "sex is not 女"
 			return None;
 
@@ -276,7 +287,11 @@ class douban(object):
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 A = douban(1166896, "D:/python_save/douban/actor");
+=======
+A = douban("https://movie.douban.com/celebrity/1324717/", "D:/python_git/douban/save");
+>>>>>>> parent of 5f60a83... scrapy
 =======
 A = douban("https://movie.douban.com/celebrity/1324717/", "D:/python_git/douban/save");
 >>>>>>> parent of 5f60a83... scrapy
