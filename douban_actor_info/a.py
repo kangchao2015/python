@@ -42,7 +42,9 @@ class douban(object):
 		if mode == 0:
 			self.list_loop("https://movie.douban.com/celebrity/%d/partners" %  douban_id);
 		else:
-			self.getimageurllist("https://movie.douban.com/celebrity/%d/partners" %  douban_id);
+			self.url = "https://movie.douban.com/celebrity/%d/partners" %  douban_id;
+			self.main();
+			self.getimageurllist(self.result['info_imageurl'])
 	
 	def actor_loop(self):
 		if self.url not in self.actorset:
@@ -173,11 +175,11 @@ class douban(object):
 			return None;
 		else:
 			potral_page = etree.HTML(portal_html.decode('utf-8'));
-
 		#获取相册入口url self.info_imageurl
 		portal_image_node = potral_page.xpath("//div[@id='photos']");
 		if(len(portal_image_node)  != 1):
 			print "don't have portal_image_node";
+			return ;
 		portal_image_node = portal_image_node[0];
 		
 		portal_img_node_1 = portal_image_node.xpath(".//a");
@@ -201,12 +203,14 @@ class douban(object):
 						self.result[self.col[z]] = i.xpath("span")[0].tail.strip(':').strip();
 
 		if 'info_sex' in self.result and self.result['info_sex'] != '女':
-			print self.result['info_name'], "sex is not 女"
-			return None;
+			pass;
+#			print self.result['info_name'], "sex is not 女"
+#			return None;
 
 		if 'info_job' in self.result and self.result['info_job'][0:2] != '演员':
-			print self.result['info_name'],'job is not 演员 is %s' % self.result['info_job'];
-			return None;
+			pass;
+#			print self.result['info_name'],'job is not 演员 is %s' % self.result['info_job'];
+#			return None;
 		
 
 		self.target_path = os.path.join(self.path, self.result['info_name']);
@@ -252,6 +256,6 @@ class douban(object):
 	    urllib.urlretrieve(url, path);
 
 
-A = douban(1319247, "D:\python_save\douban\save");
+A = douban(1166896, "D:/python_save/douban/actor");
 
 
