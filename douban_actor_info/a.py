@@ -20,18 +20,8 @@ sys.setdefaultencoding('utf8');
 
 
 class douban(object):
-<<<<<<< HEAD
-<<<<<<< HEAD
-	def __init__(self, douban_id, path,mode=0):
+	def __init__(self, douban_id, path):
 		self.url = ""
-=======
-	def __init__(self, uri, path):
-		self.url = uri
->>>>>>> parent of 5f60a83... scrapy
-=======
-	def __init__(self, uri, path):
-		self.url = uri
->>>>>>> parent of 5f60a83... scrapy
 		self.num = 2;
 		self.default_agetnt = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36';
 		self.default_agetnt1 = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063'
@@ -49,20 +39,12 @@ class douban(object):
 		self.actorlist	= set([]);
 
 		self.count = 1;
-<<<<<<< HEAD
-		if mode == 0:
-			self.list_loop("https://movie.douban.com/celebrity/%d/partners" %  douban_id);
-		else:
-			self.url = "https://movie.douban.com/celebrity/%d/partners" %  douban_id;
-			self.main();
-			self.getimageurllist(self.result['info_imageurl'])
-=======
 
-		self.list_loop("https://movie.douban.com/celebrity/1324717/partners");
-<<<<<<< HEAD
->>>>>>> parent of 5f60a83... scrapy
-=======
->>>>>>> parent of 5f60a83... scrapy
+		self.url = "https://movie.douban.com/celebrity/%d" %  douban_id;
+		ret = self.main();
+		if ret != None:
+			print self.totalimg 
+			self.getimageurllist(self.result['info_imageurl']);
 	
 	def actor_loop(self):
 		if self.url not in self.actorset:
@@ -193,11 +175,11 @@ class douban(object):
 			return None;
 		else:
 			potral_page = etree.HTML(portal_html.decode('utf-8'));
+
 		#获取相册入口url self.info_imageurl
 		portal_image_node = potral_page.xpath("//div[@id='photos']");
 		if(len(portal_image_node)  != 1):
 			print "don't have portal_image_node";
-			return ;
 		portal_image_node = portal_image_node[0];
 		
 		portal_img_node_1 = portal_image_node.xpath(".//a");
@@ -221,26 +203,10 @@ class douban(object):
 						self.result[self.col[z]] = i.xpath("span")[0].tail.strip(':').strip();
 
 		if 'info_sex' in self.result and self.result['info_sex'] != '女':
-<<<<<<< HEAD
-<<<<<<< HEAD
 			pass;
-#			print self.result['info_name'], "sex is not 女"
-#			return None;
 
 		if 'info_job' in self.result and self.result['info_job'][0:2] != '演员':
 			pass;
-#			print self.result['info_name'],'job is not 演员 is %s' % self.result['info_job'];
-#			return None;
-=======
-=======
->>>>>>> parent of 5f60a83... scrapy
-			print "sex is not 女"
-			return None;
-
-		if 'info_job' in self.result and self.result['info_job'][0:2] != '演员':
-			print 'job is not 演员 is %s' % self.result['info_job'];
-			return None;
->>>>>>> parent of 5f60a83... scrapy
 		
 
 		self.target_path = os.path.join(self.path, self.result['info_name']);
@@ -286,14 +252,4 @@ class douban(object):
 	    urllib.urlretrieve(url, path);
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-A = douban(1166896, "D:/python_save/douban/actor");
-=======
-A = douban("https://movie.douban.com/celebrity/1324717/", "D:/python_git/douban/save");
->>>>>>> parent of 5f60a83... scrapy
-=======
-A = douban("https://movie.douban.com/celebrity/1324717/", "D:/python_git/douban/save");
->>>>>>> parent of 5f60a83... scrapy
-
-
+A = douban(1275620, "D:/python_save/douban/actor");
