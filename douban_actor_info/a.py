@@ -41,6 +41,8 @@ class douban(object):
 		self.count = 1;
 
 		self.url = "https://movie.douban.com/celebrity/%d" %  douban_id;
+
+		# self.actor_loop();
 		ret = self.main();
 		if ret != None:
 			print self.totalimg 
@@ -153,7 +155,7 @@ class douban(object):
 
 	def get_all_link(self,html):
 	    link_reg = '<a[^>]+href=["\'](.*?)["\']' 
-	    reg_obj = re.compile(link_reg,re.IGNORECASE);
+	    reg_obj = re.compile(link_reg, re.IGNORECASE);
 	    return reg_obj.findall(html);
 
 	def main(self):
@@ -252,4 +254,4 @@ class douban(object):
 	    urllib.urlretrieve(url, path);
 
 
-A = douban(1275620, "D:/python_save/douban/actor");
+A = douban(1044899, "D:/python_save/douban/actor");	
